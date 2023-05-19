@@ -9,3 +9,9 @@ conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvi
 conda install matplotlib
 conda install tqdm
 ```
+
+## Usage
+### Task 1 Fashion-MNIST Clothing Classification
+
+
+### Task 2 Image Reconstruction

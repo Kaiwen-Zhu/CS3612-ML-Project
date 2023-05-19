@@ -28,6 +28,6 @@ def make_visualization_argparser():
         os.path.abspath(os.path.dirname(__file__)), 'data'))
     arg_parser.add_argument('--save_root', default=os.path.join(
         os.path.abspath(os.path.dirname(__file__)), 'checkpoints'))
-    arg_parser.add_argument('--model_dir', default='337232', type=str)
+    arg_parser.add_argument('--model_dir', default='best', type=str)
 
     return arg_parser.parse_args()

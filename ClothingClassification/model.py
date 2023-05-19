@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -57,5 +56,5 @@ class MyNet(nn.Module):
         out = F.log_softmax(fc2_out, dim=1)
 
         if return_emd:
-            return out, fc2_out, fc1_out, layer2_out, layer1_out
+            return out, fc1_out, layer1_out
         return out

@@ -4,10 +4,8 @@ import os
 import matplotlib.pyplot as plt
 import pickle
 from MyPCA import my_PCA
-# from MyTSNE import my_tSNE
-from sklearn.manifold import TSNE
-from typing import Optional, List
-from torchsummary import summary
+from MyTSNE import my_tSNE
+from typing import List, Optional
 from model import MyNet
 from config import make_visualization_argparser
 from data import get_data
@@ -26,7 +24,7 @@ def plot_loss_accuracy(model_path: str, img_path: str):
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig(os.path.join(img_path, 'loss.png'), bbox_inches='tight', pad_inches=0)
+    plt.savefig(os.path.join(img_path, 'loss.png'), dpi=500, bbox_inches='tight', pad_inches=0)
 
     plt.figure()
     plt.plot(loss_acc['train_accs'], label='Training Accuracy')
@@ -34,12 +32,12 @@ def plot_loss_accuracy(model_path: str, img_path: str):
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
     plt.legend()
-    plt.savefig(os.path.join(img_path, 'accuracy.png'), bbox_inches='tight', pad_inches=0)
+    plt.savefig(os.path.join(img_path, 'accuracy.png'), dpi=500, bbox_inches='tight', pad_inches=0)
 
     plt.close('all')
 
 
-def visualize_2d(samples: np.ndarray, method: str, img_path: str, name: str) -> Optional[np.float32]:
+def visualize_2d(samples: np.ndarray, method: str, img_path: str, name: str) -> Optional[float]:
     """Visualizes the 2D embeddings of the given samples using the given method.
 
     Args:
@@ -49,18 +47,17 @@ def visualize_2d(samples: np.ndarray, method: str, img_path: str, name: str) -> 
         name (str): The name of the plot.
 
     Returns:
-        Optional[np.float32]: The proportions of preserved variance in PCA.
+        Optional[float]: Proportion of preserved variance of PCA.
     """    
 
     assert method in ['pca', 'tsne', 'both']
     if method == 'pca':
-        embeddings = [('pca', *my_PCA(samples.reshape(samples.shape[0], -1)))]
+        embeddings = [('pca', *my_PCA(samples))]
     elif method == 'tsne':
-        # embeddings = ['tsne', my_tSNE(samples.reshape(samples.shape[0], -1))]
-        embeddings = [('tsne', TSNE(n_components=2).fit_transform(samples.reshape(samples.shape[0], -1)))]
+        embeddings = [('tsne', my_tSNE(samples))]
     else:
-        embeddings = [('pca', *my_PCA(samples.reshape(samples.shape[0], -1))),
-                      ('tsne', TSNE(n_components=2).fit_transform(samples.reshape(samples.shape[0], -1)))]
+        embeddings = [('pca', *my_PCA(samples)),
+                      ('tsne', my_tSNE(samples))]
     prop = None
     for emb in embeddings:
         mtd = emb[0]
@@ -70,7 +67,7 @@ def visualize_2d(samples: np.ndarray, method: str, img_path: str, name: str) -> 
         for y in range(10):
             plt.scatter(emb[15*y:15*(y+1),0], emb[15*y:15*(y+1),1], label=y, s=5)
         plt.legend(loc='lower center', bbox_to_anchor=(0.5,1), borderaxespad=1, ncol=5)
-        plt.savefig(os.path.join(img_path, '{}_{}.png'.format(name, mtd)), bbox_inches='tight', pad_inches=0)
+        plt.savefig(os.path.join(img_path, '{}_{}.png'.format(name, mtd)), dpi=500, bbox_inches='tight', pad_inches=0)
         plt.close('all')
     
     if prop is not None:
@@ -83,7 +80,37 @@ def plot_preserved_var(props: List[float], names: List[str], img_path: str):
     plt.bar(names[::-1], props[::-1])
     plt.xlabel('Layer')
     plt.ylabel('Preserved Variance')
-    plt.savefig(os.path.join(img_path, 'preserved_var.png'), bbox_inches='tight', pad_inches=0)
+    plt.savefig(os.path.join(img_path, 'preserved_var.png'), dpi=500, bbox_inches='tight', pad_inches=0)
+    plt.close('all')
+
+
+def get_CH_index(samples: np.ndarray):
+    """Computes the Calinski-Harabasz index of the given samples."""    
+    
+    K = 10
+    # Compute the centers of classes
+    c = np.empty((K, samples.shape[1]))
+    for i in range(K):
+        c[i] = np.mean(samples[15*i:15*(i+1)], axis=0)
+    # Compute the sum of within-cluster dispersion
+    W = 0
+    for i in range(K):
+        W += np.sum((samples[15*i:15*(i+1)] - c[i])**2)
+    # Compute the centers of all samples
+    c_all = np.mean(samples, axis=0)
+    # Compute the sum of between-cluster dispersion 
+    B = 15 * np.sum((c - c_all)**2)
+
+    return (B / W) * (samples.shape[0] - K) / (K - 1)
+
+
+def plot_CHI(CHIs: List[float], names: List[str], img_path: str):
+    """Plots the Calinski-Harabasz index."""    
+
+    plt.bar(names[::-1], CHIs[::-1])
+    plt.xlabel('Layer')
+    plt.ylabel('Calinski-Harabasz Index')
+    plt.savefig(os.path.join(img_path, 'CHI.png'), dpi=500, bbox_inches='tight', pad_inches=0)
     plt.close('all')
 
 
@@ -108,8 +135,6 @@ model = MyNet(num_res_blocks=int(train_args['num_res_blocks']),
 state_dict = torch.load(os.path.join(model_path, 'model.pth'))
 model.load_state_dict(state_dict)
 model.eval()
-# print(model)
-# summary(model, (1,32,32))
 
 
 # Plot the loss and accuracy curves
@@ -127,14 +152,17 @@ samples = torch.from_numpy(samples).to(device)
 # Compute features
 with torch.no_grad():
     embeds = [embed.cpu().detach().numpy().reshape(150,-1) for embed in model(samples, return_emd=True)]
-# Compute accuracy
-pred = np.argmax(embeds[0], axis=1)
-truth = np.repeat(np.arange(10), 15)
-print(f"Accuracy: {100*round((pred == truth).mean(), 4)}%")
+# # Compute accuracy
+# pred = np.argmax(embeds[0], axis=1)
+# truth = np.repeat(np.arange(10), 15)
+# print(f"Accuracy: {round(100*(pred == truth).mean(), 2)}%")
 
 props = []
-names = ['out', 'fc2_out', 'fc1_out', 'layer2_out', 'layer1_out']
+CHI = []
+names = ['out', 'fc_out', 'conv_out']
 for embed, name in zip(embeds, names):
     props.append(visualize_2d(embed, 'both', img_path, name))
+    CHI.append(get_CH_index(embed))
 
 plot_preserved_var(props, names, img_path)
+plot_CHI(CHI, names, img_path)
