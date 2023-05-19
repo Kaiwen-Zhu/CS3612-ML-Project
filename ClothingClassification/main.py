@@ -1,32 +1,64 @@
 import numpy as np
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
-import matplotlib.pyplot as plt
 import gc
 import random
-from config import make_argparser
+import os
+import pickle
+from time import time
+import logging
+from config import make_train_argparser
 from data_loader import get_dataloader
 from model import MyNet
 
 
 seed = 230423
 torch.manual_seed(seed)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed(seed)
 np.random.seed(seed)
 random.seed(seed)
 
-args = make_argparser()
+args = make_train_argparser()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-train_loader, test_loader = get_dataloader(args.data_root, args.batch_size)
-model = MyNet().to(device)
+model = MyNet(num_res_blocks=args.num_res_blocks, 
+              num_channel_1=args.num_channel_1,
+              num_channel_2=args.num_channel_2,
+              hidden_dim_fc=args.hidden_dim_fc).to(device)
 loss_fn = F.nll_loss
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
-# Train the model
+train_loader, val_loader, test_loader = get_dataloader(args.data_root, args.batch_size)
+
+save_path = os.path.join(args.save_root, str(round(time()))[-6:]+"no_bn")
+os.mkdir(save_path)
+
+# Create logger
+logger = logging.getLogger('train')
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(message)s')
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+fh = logging.FileHandler(os.path.join(save_path, 'log.txt'))
+fh.setLevel(logging.INFO)
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
+logger.info("Arguments:")
+for k, v in vars(args).items():
+    logger.info(f'  {k}: {v}')
+
 train_losses, train_accs = [], []
 test_losses, test_accs = [], []
+val_losses = []
+best_stat = {'epoch': -1, 'val_loss': float('inf'), 'test_loss': float('inf'), 'test_acc': 0}
+
+# Train the model
 for epoch in range(args.epochs):
+    # train
     model.train()
     train_loss, train_acc = 0, 0
     for X, Y in train_loader:
@@ -40,12 +72,11 @@ for epoch in range(args.epochs):
         optimizer.step()
     train_losses.append(train_loss/len(train_loader))
     train_accs.append(train_acc/len(train_loader))
-    print(f'Epoch {epoch}:\tTraining Loss: {train_losses[-1]:.4f}\tTrain Acc: {100*train_accs[-1]:.2f}%', end='\t')    
 
     torch.cuda.empty_cache()
     gc.collect()
-    
-    model.eval()
+
+    # test
     test_loss, test_acc = 0, 0
     with torch.no_grad():
         for X, Y in test_loader:
@@ -55,21 +86,35 @@ for epoch in range(args.epochs):
             test_acc += (pred.argmax(dim=1) == Y).cpu().float().mean()
     test_losses.append(test_loss/len(test_loader))
     test_accs.append(test_acc/len(test_loader))
-    print(f'Testing Loss: {test_losses[-1]:.4f}\tTest Acc: {100*test_accs[-1]:.2f}%')
+
+    # validate
+    model.eval()
+    val_loss = 0
+    with torch.no_grad():
+        for X, Y in val_loader:
+            pred = model(X)
+            loss = loss_fn(pred, Y)
+            val_loss += loss.cpu().item()
+    val_loss /= len(val_loader)
+    val_losses.append(val_loss)
+    if val_loss < best_stat['val_loss']:
+        best_stat['epoch'] = epoch
+        best_stat['val_loss'] = val_loss
+        best_stat['test_loss'] = test_losses[-1]
+        best_stat['test_acc'] = test_accs[-1]
+        torch.save(model.state_dict(), os.path.join(save_path, 'model.pth'))
+    best_msg = f"\nNew best model in epoch {epoch}!" if epoch == best_stat['epoch'] else ''
+
+    logger.info(f'Epoch {epoch},\ttraining loss: {train_losses[-1]:.4f},\ttrain acc: {100*train_accs[-1]:.2f}%,\t\
+validation loss: {val_losses[-1]:.4f},\ttesting loss: {test_losses[-1]:.4f},\ttest acc: {100*test_accs[-1]:.2f}%'+best_msg) 
+
+logger.info(f"Final best model in epoch {best_stat['epoch']}, validation loss: {best_stat['val_loss']:.4f}, \
+testing loss: {best_stat['test_loss']:.4f}, test acc: {100*best_stat['test_acc']:.2f}%")
 
 
-# Plot the training and testing losses
-plt.figure()
-plt.plot(train_losses, label='Training Loss')
-plt.plot(test_losses, label='Testing Loss')
-plt.legend()
-plt.savefig('loss.png', bbox_inches='tight', pad_inches=0)
-plt.show()
+# Save the loss and accuracy
+with open(os.path.join(save_path, 'loss_acc.pkl'), 'wb') as f:
+    pickle.dump({'train_losses': train_losses, 'train_accs': train_accs,
+                    'test_losses': test_losses, 'test_accs': test_accs}, f)
 
-# Plot the training and testing accuracies
-plt.figure()
-plt.plot(train_accs, label='Training Accuracy')
-plt.plot(test_accs, label='Testing Accuracy')
-plt.legend()
-plt.savefig('accuracy.png', bbox_inches='tight', pad_inches=0)
-plt.show()
+logger.info(f"Saved to {save_path}!")
