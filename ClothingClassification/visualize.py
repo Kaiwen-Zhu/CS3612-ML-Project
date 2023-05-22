@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import os
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 import pickle
 from MyPCA import my_PCA
 from MyTSNE import my_tSNE
@@ -79,7 +80,8 @@ def plot_preserved_var(props: List[float], names: List[str], img_path: str):
 
     plt.bar(names[::-1], props[::-1])
     plt.xlabel('Layer')
-    plt.ylabel('Preserved Variance')
+    plt.ylabel('Proportion of Preserved Variance')
+    plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
     plt.savefig(os.path.join(img_path, 'preserved_var.png'), dpi=500, bbox_inches='tight', pad_inches=0)
     plt.close('all')
 
