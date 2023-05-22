@@ -11,7 +11,11 @@ conda install tqdm
 ```
 
 ## Usage
+The Python files can be directly run with default parameters.
 ### Task 1 Fashion-MNIST Clothing Classification
++ Run `ClothingClassification/main.py` to train the model. Results will be saved to `ClothingClassification/checkpoints` by default.
++ Run `ClothingClassification/visualize.py` to visualize the results. The directory of the results can be specified by the parameter `model_dir` (`best` by default).
 
+For more details of the files refer to `ClothingClassification/README.md`.
 
 ### Task 2 Image Reconstruction
