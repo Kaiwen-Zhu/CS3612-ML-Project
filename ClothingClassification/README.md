@@ -1,7 +1,7 @@
 ## Files
 + `main.py`: The script for training the model.
-+ `visualize.py`: The script for visualize the results.
-+ `config.py`: The script for configure parameters of `main.py` and `visualize.py`.
++ `visualize.py`: The script for visualizing the results.
++ `config.py`: The script for configuring parameters of `main.py` and `visualize.py`.
 + `model.py`: The neural network.
 + `data_loader.py`: The script for loading data.
 + `MyPCA.py`: The script for implementing PCA.
