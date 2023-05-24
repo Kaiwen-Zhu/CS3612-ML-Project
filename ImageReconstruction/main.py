@@ -22,7 +22,7 @@ random.seed(seed)
 args = make_train_argparser()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model = MyVAE().to(device)
+model = MyVAE(init_size=32, code_dim=args.code_dim, hidden_dims=args.hidden_dims).to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
 train_loader, val_loader = get_dataloader(args.data_root, args.batch_size)
@@ -91,7 +91,7 @@ logger.info(f"Final best model in epoch {best_stat['epoch']}, validation loss: {
 
 
 # Save the loss and accuracy
-with open(os.path.join(save_path, 'loss_acc.pkl'), 'wb') as f:
+with open(os.path.join(save_path, 'loss.pkl'), 'wb') as f:
     pickle.dump({'train_losses': train_losses, 'val_losses': val_losses}, f)
 
 logger.info(f"Saved to {save_path}!")
