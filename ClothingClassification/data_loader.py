@@ -27,8 +27,7 @@ class FashionMNISTDataset(Dataset):
     
 
 def get_dataloader(data_root: str, batch_size: int) -> Tuple[DataLoader, DataLoader]:    
-    """Returns the data loaders of training, validation and test sets.
-    """    
+    """Returns the data loaders of training, validation and test sets."""    
     
     X_train, X_test, Y_train, Y_test = get_data(data_root)
     nsamples = len(X_train)

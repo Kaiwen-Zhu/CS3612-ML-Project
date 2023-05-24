@@ -31,7 +31,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.w
 
 train_loader, val_loader, test_loader = get_dataloader(args.data_root, args.batch_size)
 
-save_path = os.path.join(args.save_root, str(round(time()))[-6:]+"no_bn")
+save_path = os.path.join(args.save_root, str(round(time()))[-6:])
 os.mkdir(save_path)
 
 # Create logger
