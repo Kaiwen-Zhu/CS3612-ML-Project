@@ -2,8 +2,7 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader
 from typing import Tuple
 import torch
-import matplotlib.pyplot as plt
-from data import get_data
+from data import get_image_path, load_image
 
 
 class LFWDataset(Dataset):
@@ -24,7 +23,9 @@ class LFWDataset(Dataset):
 def get_dataloader(data_root: str, batch_size: int) -> Tuple[DataLoader, DataLoader]:    
     """Returns the data loaders of training and validation sets."""   
 
-    X_train = get_data(data_root)
+    print(data_root)
+    image_paths = get_image_path(data_root)
+    X_train = load_image(image_paths)
     nsamples = len(X_train)
     prop = 0.8  # proportion of training set
     train_dataset = LFWDataset(X_train[:int(nsamples*prop)])

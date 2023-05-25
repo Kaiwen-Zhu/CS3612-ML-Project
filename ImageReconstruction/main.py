@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-import torch.nn.functional as F
 import gc
 import random
 import os
@@ -22,7 +21,8 @@ random.seed(seed)
 args = make_train_argparser()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model = MyVAE(init_size=32, code_dim=args.code_dim, hidden_dims=args.hidden_dims).to(device)
+model = MyVAE(init_size=256, code_dim=args.code_dim, 
+                hidden_dims=args.hidden_dims).to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
 train_loader, val_loader = get_dataloader(args.data_root, args.batch_size)

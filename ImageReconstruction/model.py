@@ -17,6 +17,7 @@ class MyVAE(nn.Module):
 
         self.hidden_dims = hidden_dims
         self.final_size = init_size >> len(hidden_dims)
+        fc_dim = hidden_dims[-1]*(self.final_size**2)
         channels = [3] + hidden_dims
 
         # Encoder
@@ -30,12 +31,12 @@ class MyVAE(nn.Module):
                     nn.ReLU())
             )
         self.encode_block = nn.Sequential(*encode_layers)
-        self.fc_mean = nn.Linear(hidden_dims[-1]*(self.final_size**2), code_dim)
-        self.fc_logvar = nn.Linear(hidden_dims[-1]*(self.final_size**2), code_dim)
+        self.fc_mean = nn.Linear(fc_dim, code_dim)
+        self.fc_logvar = nn.Linear(fc_dim, code_dim)
 
         # Decoder
         decode_layers = []
-        self.fc_decode = nn.Linear(code_dim, hidden_dims[-1]*(self.final_size**2))
+        self.fc_decode = nn.Linear(code_dim, fc_dim)
         channels.reverse()
         for i in range(len(channels)-2):
             decode_layers.append(

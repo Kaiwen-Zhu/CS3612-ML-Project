@@ -1,0 +1,133 @@
+Arguments:
+  data_root: /lustre/home/acct-stu/stu177/ImageReconstruction/data
+  save_root: /lustre/home/acct-stu/stu177/ImageReconstruction/checkpoints
+  batch_size: 64
+  epochs: 100
+  lr: 0.001
+  weight_decay: 0.0001
+  code_dim: 256
+  hidden_dims: [16, 32, 64, 64, 128]
+Epoch 0,	training loss: 7837.1418,	validation loss: 5156.2036,
+New best model in epoch 0!
+Epoch 1,	training loss: 4371.7539,	validation loss: 4064.7065,
+New best model in epoch 1!
+Epoch 2,	training loss: 3566.9357,	validation loss: 3223.2672,
+New best model in epoch 2!
+Epoch 3,	training loss: 3111.9454,	validation loss: 3084.2909,
+New best model in epoch 3!
+Epoch 4,	training loss: 2904.8324,	validation loss: 2985.2224,
+New best model in epoch 4!
+Epoch 5,	training loss: 2734.7956,	validation loss: 2691.0240,
+New best model in epoch 5!
+Epoch 6,	training loss: 2613.1624,	validation loss: 2923.2102,
+Epoch 7,	training loss: 2526.7317,	validation loss: 2501.0546,
+New best model in epoch 7!
+Epoch 8,	training loss: 2455.3032,	validation loss: 2441.4724,
+New best model in epoch 8!
+Epoch 9,	training loss: 2394.7233,	validation loss: 2388.9611,
+New best model in epoch 9!
+Epoch 10,	training loss: 2327.5042,	validation loss: 2346.0647,
+New best model in epoch 10!
+Epoch 11,	training loss: 2290.0411,	validation loss: 2369.0662,
+Epoch 12,	training loss: 2232.4318,	validation loss: 2386.2508,
+Epoch 13,	training loss: 2199.6640,	validation loss: 2234.3772,
+New best model in epoch 13!
+Epoch 14,	training loss: 2168.7370,	validation loss: 2196.8397,
+New best model in epoch 14!
+Epoch 15,	training loss: 2118.6377,	validation loss: 2193.1699,
+New best model in epoch 15!
+Epoch 16,	training loss: 2096.2213,	validation loss: 2187.8141,
+New best model in epoch 16!
+Epoch 17,	training loss: 2059.5734,	validation loss: 2148.7848,
+New best model in epoch 17!
+Epoch 18,	training loss: 2044.0244,	validation loss: 2446.1433,
+Epoch 19,	training loss: 2048.1070,	validation loss: 2253.5040,
+Epoch 20,	training loss: 1990.9845,	validation loss: 2104.3533,
+New best model in epoch 20!
+Epoch 21,	training loss: 1976.1518,	validation loss: 2196.0509,
+Epoch 22,	training loss: 1961.1088,	validation loss: 2147.8755,
+Epoch 23,	training loss: 1922.8285,	validation loss: 2101.2574,
+New best model in epoch 23!
+Epoch 24,	training loss: 1933.0027,	validation loss: 2113.5640,
+Epoch 25,	training loss: 1916.4271,	validation loss: 2107.4463,
+Epoch 26,	training loss: 1891.5270,	validation loss: 2115.0919,
+Epoch 27,	training loss: 1857.2783,	validation loss: 2065.1017,
+New best model in epoch 27!
+Epoch 28,	training loss: 1852.3681,	validation loss: 2231.5095,
+Epoch 29,	training loss: 1831.9301,	validation loss: 2127.8760,
+Epoch 30,	training loss: 1830.6363,	validation loss: 2085.0369,
+Epoch 31,	training loss: 1816.0544,	validation loss: 2188.9124,
+Epoch 32,	training loss: 1807.1047,	validation loss: 2038.3366,
+New best model in epoch 32!
+Epoch 33,	training loss: 1795.6671,	validation loss: 2101.2628,
+Epoch 34,	training loss: 1789.3422,	validation loss: 2072.2059,
+Epoch 35,	training loss: 1765.8161,	validation loss: 2048.9951,
+Epoch 36,	training loss: 1768.2558,	validation loss: 2077.8473,
+Epoch 37,	training loss: 1770.5705,	validation loss: 2047.8060,
+Epoch 38,	training loss: 1736.8435,	validation loss: 2033.0519,
+New best model in epoch 38!
+Epoch 39,	training loss: 1736.0585,	validation loss: 2047.7433,
+Epoch 40,	training loss: 1729.8279,	validation loss: 2028.1276,
+New best model in epoch 40!
+Epoch 41,	training loss: 1721.0409,	validation loss: 2066.7219,
+Epoch 42,	training loss: 1718.4933,	validation loss: 2048.8882,
+Epoch 43,	training loss: 1710.7592,	validation loss: 2039.2545,
+Epoch 44,	training loss: 1691.7071,	validation loss: 2076.1292,
+Epoch 45,	training loss: 1685.9782,	validation loss: 2018.3267,
+New best model in epoch 45!
+Epoch 46,	training loss: 1680.4250,	validation loss: 2041.2655,
+Epoch 47,	training loss: 1684.2436,	validation loss: 2048.2780,
+Epoch 48,	training loss: 1664.5298,	validation loss: 2027.0406,
+Epoch 49,	training loss: 1661.9666,	validation loss: 2065.0078,
+Epoch 50,	training loss: 1652.6124,	validation loss: 2044.0662,
+Epoch 51,	training loss: 1692.6081,	validation loss: 2052.8552,
+Epoch 52,	training loss: 1656.8640,	validation loss: 2051.3459,
+Epoch 53,	training loss: 1635.8703,	validation loss: 2073.6697,
+Epoch 54,	training loss: 1616.1981,	validation loss: 2049.3496,
+Epoch 55,	training loss: 1619.3596,	validation loss: 2050.5903,
+Epoch 56,	training loss: 1625.6569,	validation loss: 2050.8959,
+Epoch 57,	training loss: 1618.8142,	validation loss: 2046.5117,
+Epoch 58,	training loss: 1616.9089,	validation loss: 2066.5172,
+Epoch 59,	training loss: 1626.7156,	validation loss: 2051.3482,
+Epoch 60,	training loss: 1607.6041,	validation loss: 2058.0983,
+Epoch 61,	training loss: 1601.1532,	validation loss: 2060.4895,
+Epoch 62,	training loss: 1592.5223,	validation loss: 2049.1778,
+Epoch 63,	training loss: 1581.0920,	validation loss: 2039.4648,
+Epoch 64,	training loss: 1589.1725,	validation loss: 2036.5109,
+Epoch 65,	training loss: 1589.8768,	validation loss: 2062.2901,
+Epoch 66,	training loss: 1586.8261,	validation loss: 2043.9673,
+Epoch 67,	training loss: 1564.0899,	validation loss: 2099.4454,
+Epoch 68,	training loss: 1570.5343,	validation loss: 2076.4181,
+Epoch 69,	training loss: 1562.3262,	validation loss: 2052.1294,
+Epoch 70,	training loss: 1561.6468,	validation loss: 2040.7781,
+Epoch 71,	training loss: 1564.4401,	validation loss: 2041.4023,
+Epoch 72,	training loss: 1553.8889,	validation loss: 2083.0493,
+Epoch 73,	training loss: 1554.4996,	validation loss: 2051.1320,
+Epoch 74,	training loss: 1556.0995,	validation loss: 2074.0934,
+Epoch 75,	training loss: 1548.3092,	validation loss: 2056.4528,
+Epoch 76,	training loss: 1532.2077,	validation loss: 2051.9648,
+Epoch 77,	training loss: 1533.9776,	validation loss: 2058.0838,
+Epoch 78,	training loss: 1544.9738,	validation loss: 2154.9626,
+Epoch 79,	training loss: 1532.1629,	validation loss: 2121.5337,
+Epoch 80,	training loss: 1527.9925,	validation loss: 2048.3549,
+Epoch 81,	training loss: 1518.1874,	validation loss: 2077.6033,
+Epoch 82,	training loss: 1522.3740,	validation loss: 2061.1074,
+Epoch 83,	training loss: 1520.3802,	validation loss: 2089.4872,
+Epoch 84,	training loss: 1517.9143,	validation loss: 2061.0928,
+Epoch 85,	training loss: 1514.2082,	validation loss: 2158.8584,
+Epoch 86,	training loss: 1513.5696,	validation loss: 2078.1870,
+Epoch 87,	training loss: 1507.2776,	validation loss: 2061.9150,
+Epoch 88,	training loss: 1498.4925,	validation loss: 2057.1740,
+Epoch 89,	training loss: 1508.4407,	validation loss: 2085.6182,
+Epoch 90,	training loss: 1495.6677,	validation loss: 2089.7610,
+Epoch 91,	training loss: 1505.2923,	validation loss: 2071.8115,
+Epoch 92,	training loss: 1497.3195,	validation loss: 2057.5905,
+Epoch 93,	training loss: 1496.2904,	validation loss: 2059.0549,
+Epoch 94,	training loss: 1489.1427,	validation loss: 2066.7724,
+Epoch 95,	training loss: 1503.8799,	validation loss: 2105.8083,
+Epoch 96,	training loss: 1500.7261,	validation loss: 2137.0992,
+Epoch 97,	training loss: 1499.1087,	validation loss: 2087.8290,
+Epoch 98,	training loss: 1481.1371,	validation loss: 2062.8311,
+Epoch 99,	training loss: 1481.7822,	validation loss: 2109.3014,
+Final best model in epoch 45, validation loss: 2018.3267
+Saved to /lustre/home/acct-stu/stu177/ImageReconstruction/checkpoints/945467!
