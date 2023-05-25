@@ -6,3 +6,4 @@
 + `data_loader.py`: The script for loading data.
 + `data`: Data and the interface.
 + `checkpoints/best`: Results of the best model.
++ `inter_comp`: Two images to be interpolated.

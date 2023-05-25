@@ -31,6 +31,6 @@ def make_visualization_argparser():
     arg_parser.add_argument('--model_dir', type=str, default='best')
     arg_parser.add_argument('--interpolate_component', type=str, default=os.path.join(
         os.path.abspath(os.path.dirname(__file__)), 'inter_comp'),
-        help="ath to the directory containing the interpolation components")
+        help="path to the directory containing the interpolation components")
 
     return arg_parser.parse_args()
